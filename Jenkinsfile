@@ -1,41 +1,29 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "jenkins-demo-app"
-        CONTAINER_NAME = "jenkins-demo-container"
-    }
-
     stages {
-
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/YOUR_USERNAME/jenkins-ci-cd-demo.git'
-            }
-        }
 
         stage('Build') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t task2-app .'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'docker images | grep $IMAGE_NAME'
+                sh 'docker images | grep task2-app'
             }
         }
 
         stage('Deploy') {
             steps {
                 sh '''
-                docker rm -f $CONTAINER_NAME || true
+                docker rm -f task2-container || true
 
                 docker run -d \
-                --name $CONTAINER_NAME \
+                --name task2-container \
                 -p 5000:5000 \
-                $IMAGE_NAME
+                task2-app
                 '''
             }
         }
